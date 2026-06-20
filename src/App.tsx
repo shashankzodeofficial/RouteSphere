@@ -26,6 +26,7 @@ import AttendanceDashboard from './dashboards/AttendanceDashboard';
 import ReturnsDashboard from './dashboards/ReturnsDashboard';
 import RiderIntelligenceDashboard from './dashboards/RiderIntelligenceDashboard';
 import DataFlowDiagram from './dashboards/DataFlowDiagram';
+import AICommandCenter from './dashboards/AICommandCenter';
 import { startLiveEngine } from './store/liveDataStore';
 
 function AppLayout() {
@@ -60,6 +61,7 @@ function AppLayout() {
             <Route path="/returns"    element={<ReturnsDashboard />} />
             <Route path="/rider-intelligence" element={<RiderIntelligenceDashboard />} />
             <Route path="/data-flow"  element={<DataFlowDiagram />} />
+            <Route path="/ai-command" element={<AICommandCenter />} />
           </Routes>
         </div>
       </div>
