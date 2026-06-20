@@ -191,12 +191,12 @@ export default function LiveEventFeed() {
                     <span style={{ fontSize: 9, color: '#334155' }}>{fmtTime(evt.timestamp)}</span>
                   </div>
                   <div style={{ fontSize: 10, color: '#64748B', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {evt.rider} · {evt.hub}
-                    {evt.payload.tracking && ` · ${evt.payload.tracking}`}
-                    {evt.payload.amount && ` · ₹${evt.payload.amount}`}
-                    {evt.payload.stars && ` · ${evt.payload.stars}★`}
-                    {evt.payload.decision && ` · ${evt.payload.decision}`}
-                    {evt.payload.rule && ` · ${evt.payload.rule}`}
+                    {`${evt.rider} · ${evt.hub}`}
+                    {evt.payload.tracking ? ` · ${String(evt.payload.tracking)}` : null}
+                    {evt.payload.amount ? ` · ₹${String(evt.payload.amount)}` : null}
+                    {evt.payload.stars ? ` · ${String(evt.payload.stars)}★` : null}
+                    {evt.payload.decision ? ` · ${String(evt.payload.decision)}` : null}
+                    {evt.payload.rule ? ` · ${String(evt.payload.rule)}` : null}
                   </div>
                 </div>
               </div>
