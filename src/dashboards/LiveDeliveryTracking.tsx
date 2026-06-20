@@ -23,11 +23,11 @@ export default function LiveDeliveryTracking() {
   const orders = useMemo(() => filterOrders(f), [f.region, f.hub, f.city, f.deliveryPartner]);
   const metrics = useMemo(() => filterMetrics(f), [f.dateFrom, f.dateTo]);
 
-  // Merge static mock counts with live increments from the event engine
-  const total        = orders.length + Math.floor(kpis.deliveriesToday / 20);
-  const delivered    = kpis.deliveriesToday;
+  // Total Orders = Delivered + In-Transit + Failed (the only consistent tally)
+  const delivered      = kpis.deliveriesToday;
   const outForDelivery = kpis.deliveriesInTransit;
-  const failed       = kpis.deliveriesFailed;
+  const failed         = kpis.deliveriesFailed;
+  const total          = delivered + outForDelivery + failed;
   const pending      = orders.filter(o => o.status === 'pending').length;
   const exceptions   = orders.filter(o => o.status === 'exception').length;
   const successRate  = kpis.successRateLive.toFixed(1);
