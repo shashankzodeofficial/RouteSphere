@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
   Map, Users, TrendingUp, RefreshCw, AlertTriangle,
   DollarSign, Camera, Warehouse, Clock, Route, Award, UserCheck, GraduationCap, Star,
-  BookOpen, Banknote, ShieldAlert, CalendarCheck, RotateCcw, Brain, GitBranch, Cpu,
+  BookOpen, Banknote, ShieldAlert, CalendarCheck, RotateCcw, Brain, GitBranch, Cpu, FlaskConical,
 } from 'lucide-react';
 
 const NAV_OPERATIONS = [
@@ -34,10 +34,11 @@ const NAV_RIDER_DEV = [
 ];
 
 const NAV_NEW = [
-  { to: '/returns',           icon: RotateCcw,   label: 'Returns — 10E' },
-  { to: '/rider-intelligence',icon: Brain,       label: 'Rider Intel — 10F' },
-  { to: '/data-flow',         icon: GitBranch,   label: 'Data Flow & Sync' },
-  { to: '/ai-command',        icon: Cpu,         label: 'AI Command Center' },
+  { to: '/returns',           icon: RotateCcw,       label: 'Returns — 10E' },
+  { to: '/rider-intelligence',icon: Brain,           label: 'Rider Intel — 10F' },
+  { to: '/data-flow',         icon: GitBranch,       label: 'Data Flow & Sync' },
+  { to: '/ai-command',        icon: Cpu,             label: 'AI Command Center' },
+  { to: '/demo-overview',     icon: FlaskConical,    label: 'Demo Overview' },
 ];
 
 export default function Sidebar() {

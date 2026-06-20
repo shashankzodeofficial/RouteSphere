@@ -27,12 +27,16 @@ import ReturnsDashboard from './dashboards/ReturnsDashboard';
 import RiderIntelligenceDashboard from './dashboards/RiderIntelligenceDashboard';
 import DataFlowDiagram from './dashboards/DataFlowDiagram';
 import AICommandCenter from './dashboards/AICommandCenter';
+import DemoOverview from './dashboards/DemoOverview';
+import DemoLogin from './pages/DemoLogin';
+import DemoBanner from './components/DemoBanner';
 import { startLiveEngine } from './store/liveDataStore';
 
 function AppLayout() {
   const location = useLocation();
   return (
     <div className="layout">
+      <DemoBanner />
       <Sidebar />
       <div className="main-area">
         <Header pathname={location.pathname} />
@@ -61,7 +65,8 @@ function AppLayout() {
             <Route path="/returns"    element={<ReturnsDashboard />} />
             <Route path="/rider-intelligence" element={<RiderIntelligenceDashboard />} />
             <Route path="/data-flow"  element={<DataFlowDiagram />} />
-            <Route path="/ai-command" element={<AICommandCenter />} />
+            <Route path="/ai-command"    element={<AICommandCenter />} />
+            <Route path="/demo-overview" element={<DemoOverview />} />
           </Routes>
         </div>
       </div>
@@ -77,7 +82,10 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <AppLayout />
+      <Routes>
+        <Route path="/demo" element={<DemoLogin />} />
+        <Route path="/*"   element={<AppLayout />} />
+      </Routes>
     </BrowserRouter>
   );
 }
