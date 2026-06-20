@@ -1,6 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FlaskConical, X, ExternalLink, Share2 } from 'lucide-react';
+import { FlaskConical, X, Share2 } from 'lucide-react';
 import { useDemoStore } from '../store/demoStore';
 
 const FORCED = import.meta.env.VITE_DEMO_MODE === 'true';
@@ -13,50 +12,39 @@ export default function DemoBanner() {
 
   return (
     <div style={{
-      position: 'sticky', top: 0, zIndex: 2000,
-      background: 'linear-gradient(90deg,#1e1b4b,#312e81)',
-      borderBottom: '1px solid #4338CA',
-      padding: '7px 20px',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      position: 'fixed', bottom: 16, left: 16, zIndex: 3000,
+      display: 'flex', flexDirection: 'column', gap: 6,
       fontFamily: 'inherit',
     }}>
-      {/* Left — badge + message */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 5,
-          background: '#4F46E5', border: '1px solid #818CF8',
-          borderRadius: 20, padding: '2px 10px',
-        }}>
-          <FlaskConical size={11} color="#A5B4FC" />
-          <span style={{ fontSize: 10, fontWeight: 800, color: '#A5B4FC', letterSpacing: 1, textTransform: 'uppercase' }}>Demo Mode</span>
-        </div>
-        <span style={{ fontSize: 11, color: '#C7D2FE' }}>
-          You're viewing the RouteSphere Demo Environment — all data is synthetic.
+      {/* Main chip */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 7,
+        background: 'linear-gradient(135deg,#1e1b4b,#312e81)',
+        border: '1px solid #4338CA',
+        borderRadius: 20, padding: '5px 12px 5px 8px',
+        boxShadow: '0 2px 12px rgba(79,70,229,0.35)',
+      }}>
+        <FlaskConical size={12} color="#A5B4FC" />
+        <span style={{ fontSize: 10, fontWeight: 800, color: '#A5B4FC', letterSpacing: 0.8, textTransform: 'uppercase' }}>
+          Demo Mode
         </span>
-        <span style={{ fontSize: 10, color: '#6366F1', margin: '0 4px' }}>·</span>
-        <span style={{ fontSize: 10, color: '#818CF8' }}>
-          Login: <strong style={{ color: '#C7D2FE', fontWeight: 600 }}>demo@routesphere.io</strong>
-          {' / '}
-          <strong style={{ color: '#C7D2FE', fontWeight: 600 }}>demo2024</strong>
-        </span>
-      </div>
+        <span style={{ fontSize: 9, color: '#6366F1', margin: '0 1px' }}>·</span>
+        <span style={{ fontSize: 10, color: '#818CF8' }}>All data is synthetic</span>
 
-      {/* Right — share + exit */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <a
           href={demoUrl}
           target="_blank"
           rel="noopener noreferrer"
+          title="Share demo link"
           style={{
-            display: 'flex', alignItems: 'center', gap: 4,
+            display: 'flex', alignItems: 'center', gap: 3,
             fontSize: 10, color: '#818CF8', textDecoration: 'none',
             background: '#312e81', border: '1px solid #4338CA',
-            borderRadius: 6, padding: '3px 9px',
+            borderRadius: 12, padding: '2px 8px', marginLeft: 4,
           }}
         >
-          <Share2 size={10} />
-          Share Demo
-          <ExternalLink size={9} />
+          <Share2 size={9} />
+          Share
         </a>
 
         {!FORCED && (
@@ -64,13 +52,12 @@ export default function DemoBanner() {
             onClick={disableDemo}
             title="Exit demo mode"
             style={{
-              display: 'flex', alignItems: 'center', gap: 4, cursor: 'pointer',
-              fontSize: 10, color: '#818CF8', background: 'transparent',
-              border: '1px solid #4338CA', borderRadius: 6, padding: '3px 9px',
+              display: 'flex', alignItems: 'center', cursor: 'pointer',
+              background: 'transparent', border: 'none', padding: 2,
+              color: '#6366F1', marginLeft: 2,
             }}
           >
-            <X size={10} />
-            Exit Demo
+            <X size={12} />
           </button>
         )}
       </div>
