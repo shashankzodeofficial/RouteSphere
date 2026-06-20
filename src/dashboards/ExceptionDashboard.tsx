@@ -11,19 +11,22 @@ export default function ExceptionDashboard() {
 
   const exceptions = orders.filter(o => o.status === 'exception');
   const total = exceptions.length;
-  const resolved = Math.floor(total * 0.62);
-  const open = total - resolved;
   const avgResolution = 4.2;
 
   const typeBreakdown = orders.reduce<Record<string, number>>((acc, o) => {
     if (o.exception) { acc[o.exception] = (acc[o.exception] ?? 0) + 1; }
     return acc;
   }, {});
+  // Use deterministic 62% resolution ratio per type — no Math.random() so numbers
+  // are stable across re-renders and the per-type sum matches the overall total
   const typeData = Object.entries(typeBreakdown).map(([type, count]) => ({
     type: type.length > 20 ? type.slice(0, 18) + '…' : type,
     fullType: type, count,
-    resolved: Math.floor(count * (0.5 + Math.random() * 0.4)),
+    resolved: Math.floor(count * 0.62),
   })).sort((a, b) => b.count - a.count);
+
+  const resolved = typeData.reduce((s, t) => s + t.resolved, 0);
+  const open = total - resolved;
 
   const trend = metrics.map(m => ({ date: m.date.slice(5), exceptions: m.exceptions }));
 

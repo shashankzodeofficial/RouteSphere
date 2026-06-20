@@ -7,12 +7,13 @@ export default function AttemptRate() {
   const f = useFilterStore();
   const orders = useMemo(() => filterOrders(f), [f.region, f.hub, f.city, f.deliveryPartner]);
 
-  const total = orders.length;
   const first  = orders.filter(o => o.attempt === 1 && o.status === 'delivered').length;
   const second = orders.filter(o => o.attempt === 2 && o.status === 'delivered').length;
   const third  = orders.filter(o => o.attempt >= 3 && o.status === 'delivered').length;
   const rto    = orders.filter(o => o.status === 'rto').length;
-  const fa     = total > 0 ? ((first / total) * 100).toFixed(1) : 0;
+  // FAR denominator = total delivered (not all orders — unresolved orders skew the rate)
+  const totalDelivered = first + second + third;
+  const fa = totalDelivered > 0 ? ((first / totalDelivered) * 100).toFixed(1) : '0.0';
 
   const attemptDist = [
     { name: '1st Attempt', value: first, color: '#059669' },
@@ -31,12 +32,15 @@ export default function AttemptRate() {
     return acc;
   }, {});
 
-  const byHub = Object.entries(hubAttempts).map(([hub, v]) => ({
-    hub: hub.replace('-Hub','').replace('-Central',''),
-    fa: v.total ? +((v.fa / v.total) * 100).toFixed(0) : 0,
-    sa: v.total ? +((v.sa / v.total) * 100).toFixed(0) : 0,
-    ta: v.total ? +((v.ta / v.total) * 100).toFixed(0) : 0,
-  }));
+  const byHub = Object.entries(hubAttempts).map(([hub, v]) => {
+    const hubDelivered = v.fa + v.sa + v.ta;
+    return {
+      hub: hub.replace('-Hub','').replace('-Central',''),
+      fa: hubDelivered ? +((v.fa / hubDelivered) * 100).toFixed(0) : 0,
+      sa: hubDelivered ? +((v.sa / hubDelivered) * 100).toFixed(0) : 0,
+      ta: hubDelivered ? +((v.ta / hubDelivered) * 100).toFixed(0) : 0,
+    };
+  });
 
   return (
     <div>

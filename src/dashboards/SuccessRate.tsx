@@ -11,9 +11,11 @@ export default function SuccessRate() {
   const orders = useMemo(() => filterOrders(f), [f.region, f.hub, f.city, f.deliveryPartner]);
   const metrics = useMemo(() => filterMetrics(f), [f.dateFrom, f.dateTo]);
 
-  const total = orders.length;
-  const delivered = orders.filter(o => o.status === 'delivered').length;
-  const rate = total > 0 ? (delivered / total) * 100 : 0;
+  const delivered  = orders.filter(o => o.status === 'delivered').length;
+  const failed     = orders.filter(o => o.status === 'failed').length;
+  const concluded  = delivered + failed;   // pending/in-transit haven't resolved yet
+  const total      = orders.length;        // kept for "Total Attempted" label only
+  const rate       = concluded > 0 ? (delivered / concluded) * 100 : 0;
 
   // By hub
   const hubMap = orders.reduce<Record<string, { d: number; t: number }>>((acc, o) => {
@@ -59,7 +61,7 @@ export default function SuccessRate() {
         {[
           { label: 'Overall Success Rate', value: `${rate.toFixed(1)}%`, icon: <Target size={18} />, color: rateColor, bg: rate >= 85 ? '#ECFDF5' : rate >= 70 ? '#FFFBEB' : '#FEF2F2' },
           { label: 'Total Delivered', value: delivered.toLocaleString(), icon: <Award size={18} />, color: '#059669', bg: '#ECFDF5' },
-          { label: 'Total Attempted', value: total.toLocaleString(), icon: <TrendingUp size={18} />, color: '#2563EB', bg: '#EFF6FF' },
+          { label: 'Concluded Orders', value: concluded.toLocaleString(), icon: <TrendingUp size={18} />, color: '#2563EB', bg: '#EFF6FF' },
           { label: 'Best Hub Rate', value: byHub[0] ? `${byHub[0].rate}%` : '—', icon: <AlertCircle size={18} />, color: '#7C3AED', bg: '#F5F3FF', sub: byHub[0]?.hub },
         ].map(k => (
           <div className="kpi-card" key={k.label}>

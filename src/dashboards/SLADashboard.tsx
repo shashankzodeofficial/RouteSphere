@@ -17,15 +17,17 @@ export default function SLADashboard() {
   const orders = useMemo(() => filterOrders(f), [f.region, f.hub, f.city, f.deliveryPartner]);
   const metrics = useMemo(() => filterMetrics(f), [f.dateFrom, f.dateTo]);
 
-  const total = orders.length;
-  const breaches = orders.filter(o => o.slaBreach).length;
-  const onTime = total - breaches;
-  const slaRate = total > 0 ? ((onTime / total) * 100).toFixed(1) : '0.0';
+  // SLA only applies to concluded orders (delivered + failed); exclude pending/in-transit
+  const concluded = orders.filter(o => o.status === 'delivered' || o.status === 'failed').length;
+  const breaches  = orders.filter(o => o.slaBreach).length;
+  const onTime    = concluded - breaches;
+  const slaRate   = concluded > 0 ? ((onTime / concluded) * 100).toFixed(1) : '0.0';
 
   const trend = metrics.map(m => ({
     date: m.date.slice(5),
     breaches: m.slaBreaches,
-    rate: +((1 - m.slaBreaches / m.attempted) * 100).toFixed(1),
+    // Use delivered as denominator — SLA only applies to concluded deliveries
+    rate: m.delivered > 0 ? +((1 - m.slaBreaches / m.delivered) * 100).toFixed(1) : 100,
   }));
 
   const byHub = orders.reduce<Record<string, { total: number; breach: number }>>((acc, o) => {

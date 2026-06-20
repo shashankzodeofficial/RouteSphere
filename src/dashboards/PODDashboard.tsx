@@ -33,10 +33,14 @@ export default function PODDashboard() {
     { name: 'POD Missing', value: podMissing, color: '#FCA5A5' },
   ];
 
+  // Last bucket absorbs rounding remainder so all three always sum to podCaptured
+  const podPhotoSig = Math.floor(podCaptured * 0.55);
+  const podPhoto    = Math.floor(podCaptured * 0.30);
+  const podSig      = podCaptured - podPhotoSig - podPhoto;
   const podTypes = [
-    { type: 'Photo + Signature', count: Math.floor(podCaptured * 0.55), color: '#059669' },
-    { type: 'Photo Only', count: Math.floor(podCaptured * 0.30), color: '#2563EB' },
-    { type: 'Signature Only', count: Math.floor(podCaptured * 0.15), color: '#7C3AED' },
+    { type: 'Photo + Signature', count: podPhotoSig, color: '#059669' },
+    { type: 'Photo Only',        count: podPhoto,    color: '#2563EB' },
+    { type: 'Signature Only',    count: podSig,      color: '#7C3AED' },
   ];
 
   return (

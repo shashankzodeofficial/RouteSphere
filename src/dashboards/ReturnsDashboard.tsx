@@ -7,7 +7,6 @@ import {
   getReturnsKPIs, getReturnsByStatus, getReturnsByReason,
   getReturnsByHub, getReturnsDailyTrend, getReconciliationBreakdown, RETURNS_RAW,
 } from '../data/returnsData';
-import { useLiveDataStore } from '../store/liveDataStore';
 
 const STATUS_COLORS: Record<string, string> = {
   requested: '#F59E0B', approved: '#3B82F6', rejected_request: '#EF4444',
@@ -27,15 +26,9 @@ function KPICard({ label, value, sub, color = '#F5A623' }: { label: string; valu
 }
 
 export default function ReturnsDashboard() {
-  const staticKpis = useMemo(() => getReturnsKPIs(), []);
-  const { kpis: live } = useLiveDataStore();
-  // Merge static base with live increments
-  const kpis = {
-    ...staticKpis,
-    total: staticKpis.total + live.returnsPickedUpToday,
-    completed: staticKpis.completed + live.returnsReconciled,
-    pickupFailed: staticKpis.pickupFailed + live.pickupFailuresToday,
-  };
+  // Use static dataset only — live KPI counters are an independent stream and
+  // adding them on top of staticKpis caused double-counting (two unrelated sources)
+  const kpis = useMemo(() => getReturnsKPIs(), []);
   const byStatus = useMemo(() => getReturnsByStatus(), []);
   const byReason = useMemo(() => getReturnsByReason(), []);
   const byHub = useMemo(() => getReturnsByHub(), []);

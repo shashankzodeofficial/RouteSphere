@@ -263,7 +263,8 @@ function computeKPIs(): DemoKPIs {
     totalOrders,
     totalDelivered,
     totalFailed,
-    successRate:         Math.round((totalDelivered / totalOrders) * 1000) / 10,
+    // Denominator = concluded orders only; in-transit orders haven't resolved yet
+    successRate:         Math.round((totalDelivered / (totalDelivered + totalFailed)) * 1000) / 10,
     onTimeRate:          Math.round(avgOnTime * 10) / 10,
     podCompliance:       Math.round(avgPOD * 10) / 10,
     totalRevenue,
