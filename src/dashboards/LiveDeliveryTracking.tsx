@@ -19,18 +19,20 @@ const STATUS_LABELS: Record<string, string> = {
 
 export default function LiveDeliveryTracking() {
   const f = useFilterStore();
-  const { kpis, events } = useLiveDataStore();
+  const { events } = useLiveDataStore();
   const orders = useMemo(() => filterOrders(f), [f.region, f.hub, f.city, f.deliveryPartner]);
   const metrics = useMemo(() => filterMetrics(f), [f.dateFrom, f.dateTo]);
 
-  // Total Orders = Delivered + In-Transit + Failed (the only consistent tally)
-  const delivered      = kpis.deliveriesToday;
-  const outForDelivery = kpis.deliveriesInTransit;
-  const failed         = kpis.deliveriesFailed;
-  const total          = delivered + outForDelivery + failed;
-  const pending      = orders.filter(o => o.status === 'pending').length;
+  // All 5 cards from the same source (filterOrders) so they always tally.
+  // Live feel comes from the always-visible LiveKPIBar + event feed, not these cards.
+  const total        = orders.length;
+  const delivered    = orders.filter(o => o.status === 'delivered').length;
+  const outForDelivery = orders.filter(o => o.status === 'out_for_delivery').length;
+  const failed       = orders.filter(o => o.status === 'failed').length;
   const exceptions   = orders.filter(o => o.status === 'exception').length;
-  const successRate  = kpis.successRateLive.toFixed(1);
+  const pending      = orders.filter(o => o.status === 'pending').length;
+  const concluded    = delivered + failed;
+  const successRate  = concluded > 0 ? ((delivered / concluded) * 100).toFixed(1) : '0.0';
 
   const pieData = Object.entries(
     orders.reduce<Record<string, number>>((acc, o) => {
