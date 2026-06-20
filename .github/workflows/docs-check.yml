@@ -1,0 +1,39 @@
+name: Docs — Verify Documentation Exists
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "docs/**"
+
+jobs:
+  docs-check:
+    name: Documentation Gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify required docs exist
+        run: |
+          MISSING=0
+          for doc in \
+            docs/ARCHITECTURE.md \
+            docs/RECOVERY_GUIDE.md \
+            docs/SETUP_GUIDE.md \
+            docs/RELEASE_NOTES.md \
+            vercel.json; do
+            if [ ! -f "$doc" ]; then
+              echo "MISSING: $doc"
+              MISSING=$((MISSING+1))
+            else
+              echo "OK: $doc"
+            fi
+          done
+          if [ $MISSING -gt 0 ]; then
+            echo "::error::$MISSING required documentation file(s) missing"
+            exit 1
+          fi
+          echo "All required documentation files present."
